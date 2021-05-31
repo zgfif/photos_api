@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   it 'should be valid without token' do
-    user = User.new(email: 'example@mail.com', token_expires: '12-03-2021')
+    user = User.new(email: 'example@mail.com')
     expect(user).to be_valid
   end
 
