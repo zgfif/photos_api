@@ -15,6 +15,6 @@ class Token
   end
 
   def header
-    {content_type: :json, accept: :json}
+    { content_type: :json, accept: :json }
   end
 end
