@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Images', type: :request do
   describe 'GET /index' do
-    token = '803eca3f56389ca3c62c7188ab4dffd221516a32'
+    token = 'dea6a9d96ab451bd7e5fecc1579a42139972096f'
 
     headers = { 'Authorization' => "Bearer #{token}" }
 
