@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# used to generate token
 class Token
   def retrieve
     response = RestClient.post(url, payload, header)
@@ -15,6 +18,6 @@ class Token
   end
 
   def header
-    {content_type: :json, accept: :json}
+    { content_type: :json, accept: :json }
   end
 end

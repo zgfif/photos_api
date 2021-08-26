@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "Authentications", type: :request do
-  describe "POST /auth" do
+RSpec.describe 'Authentications', type: :request do
+  describe 'POST /auth' do
     let(:api_key) { Rails.application.credentials.api_key }
+
     it 'should respond with forbidden status' do
       post '/auth'
       expect(response.status).to eq(403)
