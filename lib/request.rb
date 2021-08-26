@@ -1,13 +1,19 @@
+# frozen_string_literal: true
+
+# used to perform external request
 class Request
-  def initialize
+  def get(url, headers)
+    response = RestClient.get(url, headers)
+    { status: response.code, body: hash(response.body) }
+  rescue SocketError
+    { status: 400 }
+  rescue RestClient::Unauthorized
+    { status: 401 }
   end
 
-  def get(url, headers)
-      response = RestClient.get(url, headers)
-      { status: response.code, body: JSON.parse(response.body) }
-    rescue SocketError
-      { status: 400 }
-    rescue RestClient::Unauthorized
-      { status: 401 }
+  private
+
+  def hash(json)
+    JSON.parse(json)
   end
 end

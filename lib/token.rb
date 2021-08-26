@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# used to generate token
 class Token
   def retrieve
     response = RestClient.post(url, payload, header)
