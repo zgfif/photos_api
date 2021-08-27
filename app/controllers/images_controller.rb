@@ -7,7 +7,16 @@ class ImagesController < ApplicationController
     render json: response[:body], status: response[:status]
   end
 
+  def show
+    response = Request.new.get("#{agile_url}/#{image_id}", agile_header)
+    render json: response[:body], status: response[:status]
+  end
+
   private
+
+  def image_id
+    params.permit(:id)['id']
+  end
 
   def image_params
     { params: params.permit(:page).to_hash }
