@@ -3,7 +3,7 @@
 # this class is used to handle images
 class ImagesController < ApplicationController
   def index
-    response = Request.new.get(agile_url, agile_header)
+    response = Request.new(url: agile_url, headers: agile_header).get
     render json: response[:body], status: response[:status]
   end
 

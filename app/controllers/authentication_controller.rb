@@ -27,6 +27,6 @@ class AuthenticationController < ApplicationController
   end
 
   def token
-    Token.new.retrieve
+    Token.new.get
   end
 end

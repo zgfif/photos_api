@@ -2,7 +2,15 @@
 
 # used to perform external request
 class Request
-  def get(url, headers)
+  attr_reader :url
+
+  def initialize(**args)
+    @url = args[:url]
+    @headers = args[:headers]
+    @payload = args[:payload]
+  end
+
+  def get
     response = RestClient.get(url, headers)
     { status: response.code, body: hash(response.body) }
   rescue SocketError
@@ -11,7 +19,14 @@ class Request
     { status: 401 }
   end
 
+  def post
+    response = RestClient.post(url, payload, headers)
+    { status: response.code, body: hash(response.body) }
+  end
+
   private
+
+  attr_reader :headers, :payload
 
   def hash(json)
     JSON.parse(json)

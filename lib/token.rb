@@ -2,16 +2,16 @@
 
 # used to generate token
 class Token
-  def retrieve
-    response = RestClient.post(url, payload, header)
-    JSON.parse(response.body)
+  def get
+    response = Request.new(url: url, payload: payload, headers: header).post
+    response[:body]
   end
-
-  private
 
   def url
     Rails.application.credentials.agile_url
   end
+
+  private
 
   def payload
     { 'apiKey': Rails.application.credentials.api_key }.to_json
