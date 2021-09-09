@@ -17,6 +17,8 @@ class Request
     { status: 400 }
   rescue RestClient::Unauthorized
     { status: 401 }
+  rescue RestClient::NotFound
+    { status: 404, body: { status: 'Not found' } }
   end
 
   def post
