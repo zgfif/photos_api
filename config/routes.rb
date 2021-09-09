@@ -2,6 +2,6 @@
 
 Rails.application.routes.draw do
   post '/auth', to: 'authentication#auth'
-  get '/images', to: 'images#index'
-  get 'images/page', to: 'images#index'
+  get '/images/:id', to: 'images#show'
+  get '/images/', to: 'images#index'
 end

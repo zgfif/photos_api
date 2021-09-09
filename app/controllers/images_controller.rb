@@ -7,10 +7,16 @@ class ImagesController < ApplicationController
     render json: response[:body], status: response[:status]
   end
 
+  def show
+    url = "#{agile_url}#{image_params[:params]['id']}"
+    response = Request.new(url: url, headers: agile_header).get
+    render json: response[:body], status: response[:status]
+  end
+
   private
 
   def image_params
-    { params: params.permit(:page).to_hash }
+    { params: params.permit(:page, :id).to_hash }
   end
 
   def agile_header
@@ -18,7 +24,7 @@ class ImagesController < ApplicationController
   end
 
   def agile_url
-    'http://interview.agileengine.com/images'
+    'http://interview.agileengine.com/images/'
   end
 
   def header_token
