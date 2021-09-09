@@ -3,11 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Images', type: :request do
+  token = '508c87e22d9d6b01c1d6cbc81b0daaf5edbd7183'
+  headers = { 'Authorization' => "Bearer #{token}" }
+
   describe 'GET /index' do
-    token = 'e37babdb535dcd2a801b06c047913202e1c46b2f'
-
-    headers = { 'Authorization' => "Bearer #{token}" }
-
     it 'returns http unauthorized' do
       get '/images'
       expect(response).to have_http_status(401)
@@ -30,6 +29,29 @@ RSpec.describe 'Images', type: :request do
       body = JSON.parse(response.body)
       expect(response).to have_http_status(:ok)
       expect(body['page']).to eq(2)
+    end
+  end
+
+  describe 'GET /show' do
+    it 'returns unauthorized' do
+      get '/images/123'
+      expect(response).to have_http_status(401)
+    end
+
+    it 'returns no content' do
+      get '/images/123', headers: headers
+      body = JSON.parse(response.body)
+      # p body
+      expect(body['status']).to eq('Not found')
+      expect(response).to have_http_status(404)
+    end
+
+    it 'returns image details' do
+      get '/images/ec03a7808b9feb8b66c6', headers: headers
+      body = JSON.parse(response.body)
+      # p body
+      expect(body['id']).to eq('ec03a7808b9feb8b66c6')
+      expect(response).to have_http_status(200)
     end
   end
 end
