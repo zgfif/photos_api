@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 # used to generate token
-class Token
+class TokenGeneration
   def get
     response = Request.new(url: url, payload: payload, headers: header).post
     response[:body]
   end
 
   def url
-    Rails.application.credentials.agile_url
+    Rails.application.credentials.agile_url + 'auth'
   end
 
   private

@@ -3,31 +3,29 @@
 # this class is used to handle images
 class ImagesController < ApplicationController
   def index
-    response = Request.new(url: agile_url, headers: agile_header).get
-    render json: response[:body], status: response[:status]
-  end
-
-  def show
-    url = "#{agile_url}#{image_params[:params]['id']}"
-    response = Request.new(url: url, headers: agile_header).get
-    render json: response[:body], status: response[:status]
+    if !image_params['page'] || (image_params['page'] && (1..26).include?(image_params['page'].to_i))
+      response = Rails.cache.read(url)
+      render json: { body: response[:body] }, status: response[:status]
+    else
+      render json: { body: invalid_page(image_params['page']) }, status: 200
+    end
   end
 
   private
 
+  def url
+    Rails.application.credentials.agile_url + 'images' + request_params
+  end
+
   def image_params
-    { params: params.permit(:page, :id).to_hash }
+    params.permit(:page)
   end
 
-  def agile_header
-    { Authorization: "Bearer #{header_token}" }.merge(image_params)
+  def request_params
+    image_params['page'] ? "?page=#{image_params['page']}" : ''
   end
 
-  def agile_url
-    'http://interview.agileengine.com/images/'
-  end
-
-  def header_token
-    request.headers['HTTP_AUTHORIZATION'].split[1] if request.headers.key?('HTTP_AUTHORIZATION')
+  def invalid_page(n)
+    { pictures: [], page: n, pageCount: 26, hasMore: false }
   end
 end

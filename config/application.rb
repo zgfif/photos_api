@@ -39,7 +39,7 @@ module PhotosApi
     config.autoload_paths << "#{Rails.root}/lib"
 
     config.after_initialize do
-      # caching process
+      LocalStorage.new.reset
     end
   end
 end
