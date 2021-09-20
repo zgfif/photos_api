@@ -7,18 +7,32 @@ class ImagesController < ApplicationController
       response = Rails.cache.read(url)
       render json: { body: response[:body] }, status: response[:status]
     else
-      render json: { body: invalid_page(image_params['page']) }, status: 200
+      render json: { body: invalid_page(image_params['page']) }
     end
   end
 
+  def show
+    render json: picture
+  rescue
+    render json: invalid_id, status: 404
+  end
+
   private
+
+  def invalid_id
+    { status: 'Not found' }
+  end
+
+  def picture
+    @picture ||= Picture.find(image_params[:'id'])
+  end
 
   def url
     Rails.application.credentials.agile_url + 'images' + request_params
   end
 
   def image_params
-    params.permit(:page)
+    params.permit(:page, :id)
   end
 
   def request_params

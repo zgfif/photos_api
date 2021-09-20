@@ -35,18 +35,20 @@ RSpec.describe 'Images', type: :request do
   end
 
   describe 'GET /show' do
-    xit 'returns no content' do
+    it 'returns no content' do
       get '/images/123', headers: headers
       body = JSON.parse(response.body)
       expect(body['status']).to eq('Not found')
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(:not_found)
     end
 
-    xit 'returns image details' do
-      get '/images/ec03a7808b9feb8b66c6'
+    it 'returns image details' do
+      pic = Picture.create
+
+      get "/images/#{pic.id}"
       body = JSON.parse(response.body)
-      expect(body['id']).to eq('ec03a7808b9feb8b66c6')
-      expect(response).to have_http_status(200)
+      expect(body['id']).to eq(pic.id)
+      expect(response).to have_http_status(:ok)
     end
   end
 end
