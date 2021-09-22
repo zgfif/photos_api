@@ -38,16 +38,16 @@ RSpec.describe 'Images', type: :request do
     it 'returns no content' do
       get '/images/123', headers: headers
       body = JSON.parse(response.body)
+
       expect(body['status']).to eq('Not found')
       expect(response).to have_http_status(:not_found)
     end
 
     it 'returns image details' do
-      pic = Picture.create
-
-      get "/images/#{pic.id}"
+      pic = Picture.create(image_id: '1w23')
+      get "/images/#{pic.image_id}"
       body = JSON.parse(response.body)
-      expect(body['id']).to eq(pic.id)
+      expect(body['id']).to eq(pic.image_id)
       expect(response).to have_http_status(:ok)
     end
   end

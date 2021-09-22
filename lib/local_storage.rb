@@ -2,17 +2,19 @@
 
 class LocalStorage
   def initialize
+    @image_ids = []
     @token = TokenGeneration.new.get['token']
   end
 
   def reset
     cache_first_page
     cache_image_pages
+    store_images_to_db if Picture.count == 0
   end
 
   private
 
-  attr_reader :token
+  attr_reader :token, :image_ids
 
   def cache_first_page
     Rails.cache.fetch(url) { response(url) }
@@ -20,9 +22,25 @@ class LocalStorage
 
   def cache_image_pages
     page_urls.each do |page_url|
-      Rails.cache.fetch(page_url) { response(page_url) }
+      Rails.cache.fetch(page_url) do
+        resp = response(page_url)
+          resp[:body]['pictures'].each { |pic| @image_ids << pic['id']}
+        resp
+      end
     end
   end
+
+  def store_images_to_db
+    image_ids.each do |id|
+      response = Request.new(url: "#{url}/#{id}", headers: header).get
+         add_picture_to_db(response[:body])
+    end
+  end
+
+  def add_picture_to_db(hash)
+    Picture.create(image_id: hash['id'], **hash)
+  end
+
 
   def page_urls
     list = []

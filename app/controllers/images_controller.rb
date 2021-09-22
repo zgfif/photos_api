@@ -12,19 +12,25 @@ class ImagesController < ApplicationController
   end
 
   def show
-    render json: picture
-  rescue
-    render json: invalid_id, status: 404
+    if picture
+      render json: decorated_picture
+    else
+      render json: invalid_id, status: 404
+    end
   end
 
   private
+
+  def decorated_picture
+    { id: picture.image_id, author: picture.author, camera: picture.camera, cropped_picture: picture.cropped_picture, full_picture: picture.cropped_picture , tags: picture.tags }
+  end
 
   def invalid_id
     { status: 'Not found' }
   end
 
   def picture
-    @picture ||= Picture.find(image_params[:'id'])
+    @picture ||= Picture.find_by(image_id: image_params['id'])
   end
 
   def url
