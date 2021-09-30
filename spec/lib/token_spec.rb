@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe TokenGeneration do
+RSpec.describe Token do
   describe 'retrieving token' do
     it 'should return token from external api' do
-      token = TokenGeneration.new.get
+      token = Token.retrieve
       expect(token).to include('token')
     end
   end

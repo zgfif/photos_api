@@ -3,9 +3,10 @@
 class LocalStorage
   def initialize
     @image_ids = []
-    @token = TokenGeneration.new.get['token']
+    @token = Token.retrieve['token']
   end
 
+# runs caching the first page, all pages, stores images to db
   def reset
     cache_first_page
     cache_image_pages
@@ -20,6 +21,7 @@ class LocalStorage
     Rails.cache.fetch(url) { response(url) }
   end
 
+
   def cache_image_pages
     page_urls.each do |page_url|
       Rails.cache.fetch(page_url) do
@@ -31,16 +33,8 @@ class LocalStorage
   end
 
   def store_images_to_db
-    image_ids.each do |id|
-      response = Request.new(url: "#{url}/#{id}", headers: header).get
-         add_picture_to_db(response[:body])
-    end
+    image_ids.each { |id| ImageCaching.new(id).perform }
   end
-
-  def add_picture_to_db(hash)
-    Picture.create(image_id: hash['id'], **hash)
-  end
-
 
   def page_urls
     list = []
