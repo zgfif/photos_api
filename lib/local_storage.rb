@@ -1,56 +1,32 @@
 # frozen_string_literal: true
 
 class LocalStorage
-  def initialize
-    @image_ids = []
-    @token = Token.retrieve['token']
-  end
+   def initialize
+     @token = Token.retrieve['token']
+   end
 
-# runs caching the first page, all pages, stores images to db
-  def reset
-    cache_first_page
-    cache_image_pages
-    store_images_to_db if Picture.count == 0
-  end
+   def reset
+     p 'start caching...'
+     cache_picture_pages
+     cache_images if Picture.count == 0
+     p 'done.'
+   end
 
-  private
+   private
 
-  attr_reader :token, :image_ids
+   attr_reader :token
 
-  def cache_first_page
-    Rails.cache.fetch(url) { response(url) }
-  end
+   def cache_picture_pages
+     (0..26).each do |n|
+       PageCaching.new(n, token).perform
+     end
+   end
 
+   def cache_images
+     image_ids.each { |id| ImageCaching.new(id, token).perform }
+   end
 
-  def cache_image_pages
-    page_urls.each do |page_url|
-      Rails.cache.fetch(page_url) do
-        resp = response(page_url)
-          resp[:body]['pictures'].each { |pic| @image_ids << pic['id']}
-        resp
-      end
-    end
-  end
-
-  def store_images_to_db
-    image_ids.each { |id| ImageCaching.new(id).perform }
-  end
-
-  def page_urls
-    list = []
-    (1..26).each { |n| list << "#{url}?page=#{n}" }
-    list
-  end
-
-  def response(url)
-    Request.new(url: url, headers: header).get
-  end
-
-  def url
-    Rails.application.credentials.agile_url + 'images'
-  end
-
-  def header
-    { Authorization: "Bearer #{token}" }
-  end
+   def image_ids
+     PageCaching.image_ids
+   end
 end

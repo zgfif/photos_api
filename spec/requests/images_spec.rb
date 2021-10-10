@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'Images', type: :request do
   describe 'GET /index' do
-    it 'returns http ok' do
+    it 'returns the first page without number' do
       get '/images', headers: headers
       body = JSON.parse(response.body)
       expect(body['body']['page']).to eq(1)

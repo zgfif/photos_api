@@ -1,9 +1,9 @@
 # frozen_string_literal:true
 
 class ImageCaching
-  def initialize(id)
+  def initialize(id, token)
     @id = id
-    @token = Token.retrieve['token']
+    @token = token
   end
 
   def perform
