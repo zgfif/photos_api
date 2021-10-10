@@ -4,9 +4,7 @@
 class ImagesController < ApplicationController
   def index
     if !image_params['page'] || (image_params['page'] && (1..26).include?(image_params['page'].to_i))
-      # p url
       response = Rails.cache.read(url)
-      # p response
       render json: { body: response[:body] }, status: response[:status]
     else
       render json: { body: invalid_page(image_params['page']) }
@@ -15,23 +13,13 @@ class ImagesController < ApplicationController
 
   def show
     if picture
-      render json: decorated_picture
+      render json: picture.decorate
     else
       render json: invalid_id, status: 404
     end
   end
 
   private
-
-  def decorated_picture
-    { id: picture.image_id,
-      author: picture.author,
-      camera: picture.camera,
-      cropped_picture: picture.cropped_picture,
-      full_picture: picture.cropped_picture ,
-      tags: picture.tags
-    }
-  end
 
   def invalid_id
     { status: 'Not found' }

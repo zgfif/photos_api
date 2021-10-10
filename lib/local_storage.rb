@@ -6,10 +6,8 @@ class LocalStorage
    end
 
    def reset
-     p 'start caching...'
      cache_picture_pages
      cache_images if Picture.count == 0
-     p 'done.'
    end
 
    private
