@@ -14,5 +14,6 @@ RSpec.describe Picture, type: :model do
     pic = Picture.new(attrs)
     expect(pic).to be_valid
     expect(pic.decorate).to include(id: attrs[:image_id], camera: attrs[:camera], cropped_picture: attrs[:cropped_picture], full_picture: attrs[:full_picture], tags: attrs[:tags])
+    expect(pic.decorate).to_not include(image_id: attrs[:image_id])
   end
 end

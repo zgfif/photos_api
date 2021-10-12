@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe ImageCaching do
-  token = Token.retrieve['token']
+  def token
+    Token.retrieve['token']
+  end
 
   it 'should cache image by id' do
     id = '07a455ec1c6591d714e5'
