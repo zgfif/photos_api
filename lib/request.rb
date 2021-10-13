@@ -1,36 +1,48 @@
 # frozen_string_literal: true
 
-# used to perform external request
+# used to perform external requests
 class Request
-  attr_reader :url
-
   def initialize(**args)
-    @url = args[:url]
+    @url =     args[:url]
     @headers = args[:headers]
     @payload = args[:payload]
+    @status = 200
+    @body = nil
   end
 
   def get
-    response = RestClient.get(url, headers)
-    { status: response.code, body: hash(response.body) }
-  rescue SocketError
-    { status: 400 }
-  rescue RestClient::Unauthorized
-    { status: 401 }
-  rescue RestClient::NotFound
-    { status: 404, body: { status: 'Not found' } }
+    begin
+      response = RestClient.get(url, headers)
+      @status, @body = response.code, to_hash(response.body)
+
+    rescue SocketError
+       @status = 400
+    rescue RestClient::Unauthorized
+       @status = 401
+    rescue RestClient::NotFound
+      @status, @body = 404, { status: 'Not found' }
+    end
+
+    result
+
   end
 
   def post
     response = RestClient.post(url, payload, headers)
-    { status: response.code, body: hash(response.body) }
+    @status, @body = response.code, to_hash(response.body)
+
+    result
   end
 
   private
 
-  attr_reader :headers, :payload
+  attr_reader :headers, :payload, :url
 
-  def hash(json)
+  def result
+    { status: @status, body: @body }
+  end
+
+  def to_hash(json)
     JSON.parse(json)
   end
 end
