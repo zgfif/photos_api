@@ -24,10 +24,10 @@ class ImageCaching
   end
 
   def url
-    Rails.application.credentials.agile_url + 'images/' + id
+    "#{Rails.application.credentials.agile_url}images/#{id}"
   end
 
   def header
-   { Authorization: "Bearer #{token}" }
+    { Authorization: "Bearer #{token}" }
   end
 end

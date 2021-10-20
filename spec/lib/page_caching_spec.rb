@@ -7,7 +7,7 @@ RSpec.describe PageCaching do
   token = Token.retrieve['token']
 
   it 'should cache default page' do
-    key = url + 'images'
+    key = "#{url}images"
     Rails.cache.delete(key)
     PageCaching.new(0, token).perform
     result = Rails.cache.read(key)

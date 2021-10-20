@@ -31,11 +31,11 @@ class PageCaching
   end
 
   def url
-    n == 0 ? agile_url : "#{agile_url}?page=#{n}"
+    n.zero? ? agile_url : "#{agile_url}?page=#{n}"
   end
 
   def agile_url
-    Rails.application.credentials.agile_url + 'images'
+    "#{Rails.application.credentials.agile_url}images"
   end
 
   def add_to_image_ids
