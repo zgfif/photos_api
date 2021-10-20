@@ -14,9 +14,9 @@ RSpec.describe Image do
   end
 
   it 'should not return image details' do
-   result = Image.new(params('456')).process
+    result = Image.new(params('456')).process
 
-   expect(result[:body][:status]).to eq('Not found')
-   expect(result[:status]).to eq(404)
+    expect(result[:body][:status]).to eq('Not found')
+    expect(result[:status]).to eq(404)
   end
 end

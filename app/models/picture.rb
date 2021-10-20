@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Picture < ApplicationRecord
   validates :image_id, presence: true
 
@@ -6,7 +8,6 @@ class Picture < ApplicationRecord
       camera: camera,
       author: author,
       cropped_picture: cropped_picture,
-      full_picture: full_picture, tags: tags
-    }
+      full_picture: full_picture, tags: tags }
   end
 end

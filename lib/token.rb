@@ -11,7 +11,7 @@ class Token
     private
 
     def url
-      Rails.application.credentials.agile_url + 'auth'
+      "#{Rails.application.credentials.agile_url}auth"
     end
 
     def payload

@@ -13,23 +13,24 @@ class Request
   def get
     begin
       response = RestClient.get(url, headers)
-      @status, @body = response.code, to_hash(response.body)
-
+      @status = response.code
+      @body = to_hash(response.body)
     rescue SocketError
-       @status = 400
+      @status = 400
     rescue RestClient::Unauthorized
-       @status = 401
+      @status = 401
     rescue RestClient::NotFound
-      @status, @body = 404, { status: 'Not found' }
+      @status = 404
+      @body = { status: 'Not found' }
     end
 
     result
-
   end
 
   def post
     response = RestClient.post(url, payload, headers)
-    @status, @body = response.code, to_hash(response.body)
+    @status = response.code
+    @body = to_hash(response.body)
 
     result
   end

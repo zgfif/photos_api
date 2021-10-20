@@ -56,4 +56,20 @@ RSpec.describe 'Images', type: :request do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe 'GET /search' do
+    it 'should return no content' do
+      get '/search/irrelevant_value'
+      body = JSON.parse(response.body)
+      expect(body['pictures']).to be_empty
+    end
+
+    it 'should return one picture with value' do
+      get '/search/Firm'
+      body = JSON.parse(response.body)
+
+      expect(body['pictures']).to be_present
+      expect(body['pictures'][0]['id']).to eq('ec03a7808b9feb8b66c6')
+    end
+  end
 end

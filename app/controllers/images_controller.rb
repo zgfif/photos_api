@@ -12,9 +12,15 @@ class ImagesController < ApplicationController
     render json: { body: response[:body] }, status: response[:status]
   end
 
+  def search
+    response = SearchResult.new(image_params).process
+
+    render json: { pictures: response[:pictures] }
+  end
+
   private
 
   def image_params
-    params.permit(:page, :id)
+    params.permit(:page, :id, :term)
   end
 end
