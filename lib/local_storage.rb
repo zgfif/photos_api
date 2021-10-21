@@ -25,7 +25,7 @@ class LocalStorage
   end
 
   def image_ids
-    PageCaching.image_ids
+    PageCaching.image_ids.uniq
   end
 
   def clear_pictures
